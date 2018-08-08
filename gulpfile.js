@@ -21,6 +21,7 @@ gulp.task('sass', function(){
 gulp.task('sass:watch', function(){
     gulp.watch('./resources/assets/sass/*.scss', ['sass']);
 });
+
 gulp.task('html', function () {
     gulp.src('./public/src/*.html')
         .pipe(gulp.dest('./public/src/'))
@@ -38,7 +39,7 @@ gulp.task('connect',function(){
 
 gulp.task('watch', function(){
     gulp.watch(['./resources/assets/sass/*.scss'],['sass']);
-    gulp.watch(['./public/src/*.html'], ['html']); // sass 자동 컴파일
+    gulp.watch(['./public/src/**/*.html'], ['html']); // sass 자동 컴파일
 });
 
 gulp.task('default',['connect', 'sass', 'watch']);
