@@ -2,61 +2,47 @@ const gulp = require('gulp'),
       sass = require('gulp-sass'),
       connect = require('gulp-connect'),
       sourcemaps = require('gulp-sourcemaps'),
-      uglifycss = require('gulp-uglifycss'),
       plumber = require('gulp-plumber'),
       autoprefixer = require('gulp-autoprefixer');
-      //inquirer = require('inquirer');
 
 
-const errorHandler = function (error) {
-    console.error(error.message);
-    this.emit('end');
-};
-
-const plumberOption = {
-    errorHandler: errorHandler
-}
-
-gulp.task('sass', function(){
+function cssStyle() {
     return gulp.src('./resources/assets/sass/main.scss')
-        .pipe(plumber(plumberOption))
+        .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(autoprefixer())
-        // .pipe(uglifycss({
-        //     "uglyComments": true,
-        //     "expandVars": true
-        // }))
         .pipe(sourcemaps.write('/'))
         .pipe(gulp.dest('./public/src/css/'));
-});
+}
 
-gulp.task('sass:watch', function(){
-    gulp.watch('./resources/assets/sass/*.scss', ['sass']);
-});
-
-gulp.task('html', function () {
+function htmlReload() {
     gulp.src('./public/src/*.html')
-        .pipe(plumber(plumberOption))
+        .pipe(plumber())
         .pipe(gulp.dest('./public/src/'))
         .pipe(connect.reload());
-  });
+}
 
 // gulp 서버
-gulp.task('connect',function(){
+function connectServer() {
     connect.server({
         root: './public/src/',
         livereload: true,
         port: 8080
     })
-});
+}
 
-gulp.task('watch', function(){
-    gulp.watch(['./resources/assets/sass/*.scss'],['sass']);
-    gulp.watch(['./public/src/**/*.html'], ['html']); // sass 자동 컴파일
-});
+function watch() {
+    gulp.watch('./resources/assets/sass/*.scss',cssStyle);
+    gulp.watch('./public/src/**/*.html', htmlReload); // sass 자동 컴파일
+}
 
-gulp.task('default',['connect', 'sass', 'watch']);
+const build = gulp.parallel(connectServer, cssStyle, watch);
+
+gulp.task(build);
+gulp.task('default',build);
+
+
 // gulp.task('default', function (done) {
 // 	inquirer.prompt([
 // 		{
