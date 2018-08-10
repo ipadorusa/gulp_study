@@ -31,7 +31,8 @@ function scripts() {
             .pipe(uglify())
             .pipe(concat('main.min.js'))
             .pipe(sourcemaps.write('/'))
-            .pipe(gulp.dest(`${paths.scripts.dest}`));
+            .pipe(gulp.dest(`${paths.scripts.dest}`))
+            .pipe(connect.reload());
 }
 
 function cssStyle() {
@@ -41,7 +42,8 @@ function cssStyle() {
             .pipe(sourcemaps.init())
             .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
             .pipe(sourcemaps.write('/'))
-            .pipe(gulp.dest(`${paths.styles.dest}`));
+            .pipe(gulp.dest(`${paths.styles.dest}`))
+            .pipe(connect.reload());
 }
 
 function htmlReload() {
