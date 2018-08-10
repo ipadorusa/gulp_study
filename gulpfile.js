@@ -26,30 +26,27 @@ const paths = {
 
 function scripts() {
     return gulp.src(`${paths.scripts.src}*.js`)
-        .pipe(plumber())
-        .pipe(sourcemaps.init())
-        .pipe(uglify())
-        .pipe(concat('main.min.js'))
-        .pipe(sourcemaps.write('/'))
-        .pipe(gulp.dest(`${paths.scripts.dest}`))
-        .pipe(connect.reload());
+            .pipe(plumber())
+            .pipe(sourcemaps.init())
+            .pipe(uglify())
+            .pipe(concat('main.min.js'))
+            .pipe(sourcemaps.write('/'))
+            .pipe(gulp.dest(`${paths.scripts.dest}`));
 }
 
 function cssStyle() {
     return gulp.src(`${paths.styles.src}main.scss`)
-        .pipe(plumber())
-        .pipe(rename({suffix: '.min'}))
-        .pipe(sourcemaps.init())
-        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-        .pipe(sourcemaps.write('/'))
-        .pipe(gulp.dest(`${paths.styles.dest}`))
-        .pipe(connect.reload());
+            .pipe(plumber())
+            .pipe(rename({suffix: '.min'}))
+            .pipe(sourcemaps.init())
+            .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+            .pipe(sourcemaps.write('/'))
+            .pipe(gulp.dest(`${paths.styles.dest}`));
 }
 
 function htmlReload() {
-    gulp.src(`${paths.htmls.src}**/*.html`)
+    return gulp.src(`${paths.htmls.src}**/*.html`)
         .pipe(plumber())
-        .pipe(gulp.dest(`${paths.htmls.src}`))
         .pipe(connect.reload());
 }
 
@@ -68,7 +65,7 @@ function watch() {
     gulp.watch(`${paths.htmls.src}**/*.html`, htmlReload);
 }
 
-const build = gulp.parallel(connectServer, cssStyle, scripts, watch);
+const build = gulp.parallel(connectServer, watch);
 
 gulp.task(build);
 gulp.task('default',build);
